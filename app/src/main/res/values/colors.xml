@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#0B0B0F</color>
+    <color name="card">#151A22</color>
+    <color name="red">#E50914</color>
+    <color name="text">#FFFFFF</color>
+    <color name="muted">#B8B8B8</color>
+
+    <color name="seat_available">#2A2F3A</color>
+    <color name="seat_selected">#21C063</color>
+    <color name="seat_booked">#E50914</color>
+</resources>

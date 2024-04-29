@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/img_movie_poster"
+            android:layout_width="80dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/app_logo"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="Movie Poster" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/img_movie_poster"
+            android:layout_toStartOf="@id/btn_cancel_booking"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_movie_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movie Name"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/tv_date_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date &amp; Time"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/tv_tickets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tickets: 0"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_cancel_booking"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="#E50914"
+            android:contentDescription="Cancel Booking" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

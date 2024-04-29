@@ -1,0 +1,48 @@
+{
+  "now_showing": [
+    {
+      "name": "The Dark Knight",
+      "genre": "Action",
+      "duration": "152 min",
+      "poster": "poster_dark_knight",
+      "trailerUrl": "https://www.youtube.com/watch?v=EXeTwQWrcwY"
+    },
+    {
+      "name": "Inception",
+      "genre": "Sci-Fi",
+      "duration": "148 min",
+      "poster": "poster_inception",
+      "trailerUrl": "https://www.youtube.com/watch?v=YoHD9XEInc0"
+    },
+    {
+      "name": "Interstellar",
+      "genre": "Sci-Fi",
+      "duration": "169 min",
+      "poster": "poster_interstellar",
+      "trailerUrl": "https://www.youtube.com/watch?v=zSWdZVtXT7E"
+    }
+  ],
+  "coming_soon": [
+    {
+      "name": "Oppenheimer",
+      "genre": "Drama/History",
+      "duration": "180 min",
+      "poster": "app_logo",
+      "trailerUrl": "https://www.youtube.com/watch?v=uYPbbksJxIg"
+    },
+    {
+      "name": "Dune: Part Two",
+      "genre": "Sci-Fi",
+      "duration": "166 min",
+      "poster": "app_logo",
+      "trailerUrl": "https://www.youtube.com/watch?v=Way9Dexny3w"
+    },
+    {
+      "name": "The Batman",
+      "genre": "Action/Crime",
+      "duration": "176 min",
+      "poster": "app_logo",
+      "trailerUrl": "https://www.youtube.com/watch?v=mqqft22n7RE"
+    }
+  ]
+}
