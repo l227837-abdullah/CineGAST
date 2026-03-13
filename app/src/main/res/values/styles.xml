@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="legendText">
+        <item name="android:textColor">#aaa</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+
+    <style name="legendDotGray">
+        <item name="android:layout_width">10dp</item>
+        <item name="android:layout_height">10dp</item>
+        <item name="android:layout_marginEnd">6dp</item>
+        <item name="android:background">#777</item>
+    </style>
+
+    <style name="legendDotGreen">
+        <item name="android:layout_width">10dp</item>
+        <item name="android:layout_height">10dp</item>
+        <item name="android:layout_marginEnd">6dp</item>
+        <item name="android:background">#2ECC71</item>
+    </style>
+
+    <style name="legendDotWhite">
+        <item name="android:layout_width">10dp</item>
+        <item name="android:layout_height">10dp</item>
+        <item name="android:layout_marginEnd">6dp</item>
+        <item name="android:background">#fff</item>
+    </style>
+
+</resources>
