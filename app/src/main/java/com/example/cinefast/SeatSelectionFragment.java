@@ -1,17 +1,21 @@
 package com.example.cinefast;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class SeatSelectionActivity extends AppCompatActivity {
+public class SeatSelectionFragment extends Fragment {
 
     private static final int PRICE_PER_SEAT = 16;
 
@@ -46,18 +50,15 @@ public class SeatSelectionActivity extends AppCompatActivity {
     }
 
     private Button createSeat(String seatId) {
-
-        Button seat = new Button(this);
+        Button seat = new Button(getContext());
         seat.setText("");
         seat.setAllCaps(false);
-        seat.setWidth(90);
-        seat.setHeight(90);
-        seat.setPadding(0,0,0,0);
-
+        
+        // Using layout params for size instead of fixed pixel width/height for better compatibility
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
         lp.width = 90;
         lp.height = 90;
-        lp.setMargins(10,10,10,10);
+        lp.setMargins(10, 10, 10, 10);
         seat.setLayoutParams(lp);
 
         styleSeat(seat, seatId);
@@ -86,18 +87,12 @@ public class SeatSelectionActivity extends AppCompatActivity {
         booked.add("F7");
         booked.add("E3");
 
-
         for (int r = 0; r < 6; r++) {
-
             char row = (char) ('A' + r);
-
-
             for (int c = 1; c <= 4; c++) {
                 String id = row + String.valueOf(c);
                 gridLeft.addView(createSeat(id));
             }
-
-
             for (int c = 5; c <= 8; c++) {
                 String id = row + String.valueOf(c);
                 gridRight.addView(createSeat(id));
@@ -105,46 +100,49 @@ public class SeatSelectionActivity extends AppCompatActivity {
         }
     }
 
-    private void goToSnacks() {
-        Intent i = new Intent(this, SnacksActivity.class);
-        i.putExtra("movie_name", movieName);
-        i.putExtra("seat_count", selected.size());
-        i.putExtra("ticket_total", selected.size() * PRICE_PER_SEAT);
-        i.putExtra("selected_seats_csv", String.join(",", selected));
-        startActivity(i);
-    }
-
-    private void goToSummarySkipSnacks() {
-        Intent i = new Intent(this, TicketSummaryActivity.class);
-        i.putExtra("movie_name", movieName);
-        i.putExtra("seat_count", selected.size());
-        i.putExtra("ticket_total", selected.size() * PRICE_PER_SEAT);
-        i.putExtra("snacks_total", 0);
-        i.putExtra("selected_seats_csv", String.join(",", selected));
-        startActivity(i);
-    }
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_seat_selection);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_seat_selection, container, false);
 
-        txtMovieName = findViewById(R.id.txt_movie_name);
-        txtTotals = findViewById(R.id.txtTotals);
-        btnBookSkip = findViewById(R.id.btnBookSkip);
-        btnProceedSnacks = findViewById(R.id.btnProceedSnacks);
+        txtMovieName = view.findViewById(R.id.txt_movie_name);
+        txtTotals = view.findViewById(R.id.txtTotals);
+        btnBookSkip = view.findViewById(R.id.btnBookSkip);
+        btnProceedSnacks = view.findViewById(R.id.btnProceedSnacks);
+        gridLeft = view.findViewById(R.id.gridLeft);
+        gridRight = view.findViewById(R.id.gridRight);
 
-        gridLeft = findViewById(R.id.gridLeft);
-        gridRight = findViewById(R.id.gridRight);
-
-        String name = getIntent().getStringExtra("movie_name");
-        if (name != null) movieName = name;
+        if (getArguments() != null) {
+            movieName = getArguments().getString("movie_name", "Movie");
+        }
         txtMovieName.setText(movieName);
 
         buildSeatGrids();
         updateTotals();
 
-        btnProceedSnacks.setOnClickListener(v -> goToSnacks());
-        btnBookSkip.setOnClickListener(v -> goToSummarySkipSnacks());
+        btnProceedSnacks.setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).openSnacks(
+                        movieName, 
+                        selected.size(), 
+                        selected.size() * PRICE_PER_SEAT, 
+                        String.join(",", selected)
+                );
+            }
+        });
+
+        btnBookSkip.setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).openTicketSummary(
+                        movieName, 
+                        selected.size(), 
+                        selected.size() * PRICE_PER_SEAT, 
+                        0.0, 
+                        String.join(",", selected)
+                );
+            }
+        });
+
+        return view;
     }
 }

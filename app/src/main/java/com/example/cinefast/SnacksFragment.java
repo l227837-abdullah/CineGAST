@@ -1,15 +1,19 @@
 package com.example.cinefast;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import java.util.Locale;
 
-public class SnacksActivity extends AppCompatActivity {
+public class SnacksFragment extends Fragment {
 
     private String movieName;
     private int seatCount;
@@ -40,32 +44,34 @@ public class SnacksActivity extends AppCompatActivity {
         return Math.max(0, v);
     }
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_snacks);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_snacks, container, false);
 
-        movieName = getIntent().getStringExtra("movie_name");
-        seatCount = getIntent().getIntExtra("seat_count", 0);
-        ticketTotal = getIntent().getIntExtra("ticket_total", 0);
-        seatsCsv = getIntent().getStringExtra("selected_seats_csv");
+        if (getArguments() != null) {
+            movieName = getArguments().getString("movie_name");
+            seatCount = getArguments().getInt("seat_count", 0);
+            ticketTotal = getArguments().getInt("ticket_total", 0);
+            seatsCsv = getArguments().getString("selected_seats_csv");
+        }
 
-        txtQtyPopcorn = findViewById(R.id.txtQtyPopcorn);
-        txtQtyNachos = findViewById(R.id.txtQtyNachos);
-        txtQtyDrink = findViewById(R.id.txtQtyDrink);
-        txtQtyCandy = findViewById(R.id.txtQtyCandy);
-        txtSnackTotal = findViewById(R.id.txtSnackTotal);
+        txtQtyPopcorn = view.findViewById(R.id.txtQtyPopcorn);
+        txtQtyNachos = view.findViewById(R.id.txtQtyNachos);
+        txtQtyDrink = view.findViewById(R.id.txtQtyDrink);
+        txtQtyCandy = view.findViewById(R.id.txtQtyCandy);
+        txtSnackTotal = view.findViewById(R.id.txtSnackTotal);
 
-        Button minusPop = findViewById(R.id.btnMinusPopcorn);
-        Button plusPop = findViewById(R.id.btnPlusPopcorn);
-        Button minusNach = findViewById(R.id.btnMinusNachos);
-        Button plusNach = findViewById(R.id.btnPlusNachos);
-        Button minusDrink = findViewById(R.id.btnMinusDrink);
-        Button plusDrink = findViewById(R.id.btnPlusDrink);
-        Button minusCandy = findViewById(R.id.btnMinusCandy);
-        Button plusCandy = findViewById(R.id.btnPlusCandy);
+        Button minusPop = view.findViewById(R.id.btnMinusPopcorn);
+        Button plusPop = view.findViewById(R.id.btnPlusPopcorn);
+        Button minusNach = view.findViewById(R.id.btnMinusNachos);
+        Button plusNach = view.findViewById(R.id.btnPlusNachos);
+        Button minusDrink = view.findViewById(R.id.btnMinusDrink);
+        Button plusDrink = view.findViewById(R.id.btnPlusDrink);
+        Button minusCandy = view.findViewById(R.id.btnMinusCandy);
+        Button plusCandy = view.findViewById(R.id.btnPlusCandy);
 
-        Button btnConfirm = findViewById(R.id.btnConfirm);
+        Button btnConfirm = view.findViewById(R.id.btnConfirm);
 
         minusPop.setOnClickListener(v -> { qPop = clampNonNegative(qPop - 1); txtQtyPopcorn.setText(String.valueOf(qPop)); updateSnackTotal(); });
         plusPop.setOnClickListener(v -> { qPop++; txtQtyPopcorn.setText(String.valueOf(qPop)); updateSnackTotal(); });
@@ -87,13 +93,11 @@ public class SnacksActivity extends AppCompatActivity {
                     + qDrink * PRICE_DRINK
                     + qCandy * PRICE_CANDY;
 
-            Intent i = new Intent(SnacksActivity.this, TicketSummaryActivity.class);
-            i.putExtra("movie_name", movieName);
-            i.putExtra("seat_count", seatCount);
-            i.putExtra("ticket_total", ticketTotal);
-            i.putExtra("snacks_total", snacksTotal);
-            i.putExtra("selected_seats_csv", seatsCsv);
-            startActivity(i);
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).openTicketSummary(movieName, seatCount, ticketTotal, snacksTotal, seatsCsv);
+            }
         });
+
+        return view;
     }
 }
