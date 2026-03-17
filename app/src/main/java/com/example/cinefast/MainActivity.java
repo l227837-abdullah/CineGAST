@@ -21,11 +21,12 @@ public class MainActivity extends AppCompatActivity {
         replaceFragment(new HomeFragment(), false);
     }
 
-    public void openSeatSelection(String movieName, boolean isComingSoon) {
+    public void openSeatSelection(String movieName, boolean isComingSoon, String trailerUrl) {
         SeatSelectionFragment fragment = new SeatSelectionFragment();
         Bundle args = new Bundle();
         args.putString("movie_name", movieName);
         args.putBoolean("is_coming_soon", isComingSoon);
+        args.putString("trailer_url", trailerUrl);
         fragment.setArguments(args);
         replaceFragment(fragment, true);
     }

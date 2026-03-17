@@ -25,14 +25,13 @@ public class ComingSoonFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         List<Movie> movies = new ArrayList<>();
-        // Using existing posters or app_logo if specific ones aren't available, but user said 3 per tab.
         movies.add(new Movie("Oppenheimer", "Drama/History", "180 min", R.drawable.poster_oppenheimer, "https://www.youtube.com/watch?v=uYPbbksJxIg", true));
         movies.add(new Movie("Dune: Part Two", "Sci-Fi", "166 min", R.drawable.poster_dune, "https://www.youtube.com/watch?v=Way9Dexny3w", true));
         movies.add(new Movie("The Batman", "Action/Crime", "176 min", R.drawable.poster_batman, "https://www.youtube.com/watch?v=mqqft22n7RE", true));
 
         MovieAdapter adapter = new MovieAdapter(movies, movie -> {
             if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).openSeatSelection(movie.getName(), movie.isComingSoon());
+                ((MainActivity) getActivity()).openSeatSelection(movie.getName(), movie.isComingSoon(), movie.getTrailerUrl());
             }
         });
 

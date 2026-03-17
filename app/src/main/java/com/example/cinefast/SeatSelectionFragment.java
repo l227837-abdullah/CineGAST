@@ -1,5 +1,7 @@
 package com.example.cinefast;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,8 +22,8 @@ public class SeatSelectionFragment extends Fragment {
 
     private static final int PRICE_PER_SEAT = 16;
 
-    private TextView txtMovieName, txtTotals;
-    private Button btnBookSkip, btnProceedSnacks;
+    private TextView txtMovieName, txtTotals, txtStatusTag;
+    private Button btnBookSkip, btnProceedSnacks, btnComingSoon, btnWatchTrailer;
     private GridLayout gridLeft, gridRight;
 
     private final HashSet<String> booked = new HashSet<>();
@@ -28,6 +31,8 @@ public class SeatSelectionFragment extends Fragment {
     private final ArrayList<Button> seatButtons = new ArrayList<>();
 
     private String movieName = "Movie";
+    private String trailerUrl = "";
+    private boolean isComingSoon = false;
 
     private void updateTotals() {
         int count = selected.size();
@@ -36,6 +41,8 @@ public class SeatSelectionFragment extends Fragment {
 
         btnProceedSnacks.setEnabled(count > 0);
         btnProceedSnacks.setAlpha(count > 0 ? 1f : 0.5f);
+        btnBookSkip.setEnabled(count > 0);
+        btnBookSkip.setAlpha(count > 0 ? 1f : 0.5f);
     }
 
     private void styleSeat(Button b, String seatId) {
@@ -47,24 +54,28 @@ public class SeatSelectionFragment extends Fragment {
         } else {
             b.setBackgroundResource(R.drawable.seat_available);
         }
+        
+        // Disable click if coming soon
+        if (isComingSoon) {
+            b.setEnabled(false);
+            b.setAlpha(0.6f);
+        }
     }
 
     private Button createSeat(String seatId) {
         Button seat = new Button(getContext());
         seat.setText("");
-        seat.setAllCaps(false);
         
-        // Using layout params for size instead of fixed pixel width/height for better compatibility
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-        lp.width = 90;
-        lp.height = 90;
-        lp.setMargins(10, 10, 10, 10);
+        lp.width = 80;
+        lp.height = 80;
+        lp.setMargins(8, 8, 8, 8);
         seat.setLayoutParams(lp);
 
         styleSeat(seat, seatId);
 
         seat.setOnClickListener(v -> {
-            if (booked.contains(seatId)) return;
+            if (isComingSoon || booked.contains(seatId)) return;
 
             if (selected.contains(seatId))
                 selected.remove(seatId);
@@ -83,19 +94,14 @@ public class SeatSelectionFragment extends Fragment {
         booked.add("A2");
         booked.add("B4");
         booked.add("C1");
-        booked.add("D6");
-        booked.add("F7");
-        booked.add("E3");
 
         for (int r = 0; r < 6; r++) {
             char row = (char) ('A' + r);
             for (int c = 1; c <= 4; c++) {
-                String id = row + String.valueOf(c);
-                gridLeft.addView(createSeat(id));
+                gridLeft.addView(createSeat(row + String.valueOf(c)));
             }
             for (int c = 5; c <= 8; c++) {
-                String id = row + String.valueOf(c);
-                gridRight.addView(createSeat(id));
+                gridRight.addView(createSeat(row + String.valueOf(c)));
             }
         }
     }
@@ -103,22 +109,52 @@ public class SeatSelectionFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_seat_selection, container, false);
+        View view = inflater.inflate(R.layout.fragment_seat_selection, container, false);
 
         txtMovieName = view.findViewById(R.id.txt_movie_name);
+        txtStatusTag = view.findViewById(R.id.txtStatusTag);
         txtTotals = view.findViewById(R.id.txtTotals);
+        
         btnBookSkip = view.findViewById(R.id.btnBookSkip);
         btnProceedSnacks = view.findViewById(R.id.btnProceedSnacks);
+        btnComingSoon = view.findViewById(R.id.btnComingSoon);
+        btnWatchTrailer = view.findViewById(R.id.btnWatchTrailer);
+        
         gridLeft = view.findViewById(R.id.gridLeft);
         gridRight = view.findViewById(R.id.gridRight);
 
         if (getArguments() != null) {
             movieName = getArguments().getString("movie_name", "Movie");
+            isComingSoon = getArguments().getBoolean("is_coming_soon", false);
+            trailerUrl = getArguments().getString("trailer_url", "");
         }
+
         txtMovieName.setText(movieName);
+        
+        if (isComingSoon) {
+            txtStatusTag.setText("COMING SOON");
+            txtStatusTag.setBackgroundResource(R.drawable.bg_gray_tag);
+            
+            btnBookSkip.setVisibility(View.GONE);
+            btnProceedSnacks.setVisibility(View.GONE);
+            btnComingSoon.setVisibility(View.VISIBLE);
+            btnWatchTrailer.setVisibility(View.VISIBLE);
+            
+            txtTotals.setText("Seats are currently unavailable for booking.");
+        } else {
+            txtStatusTag.setText("NOW SHOWING");
+            txtStatusTag.setBackgroundResource(R.drawable.bg_green_tag);
+            updateTotals();
+        }
 
         buildSeatGrids();
-        updateTotals();
+
+        btnWatchTrailer.setOnClickListener(v -> {
+            if (!trailerUrl.isEmpty()) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
+                startActivity(intent);
+            }
+        });
 
         btnProceedSnacks.setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
@@ -132,6 +168,7 @@ public class SeatSelectionFragment extends Fragment {
         });
 
         btnBookSkip.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "Booking Confirmed!", Toast.LENGTH_SHORT).show();
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).openTicketSummary(
                         movieName, 

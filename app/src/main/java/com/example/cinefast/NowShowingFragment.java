@@ -31,7 +31,7 @@ public class NowShowingFragment extends Fragment {
 
         MovieAdapter adapter = new MovieAdapter(movies, movie -> {
             if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).openSeatSelection(movie.getName(), movie.isComingSoon());
+                ((MainActivity) getActivity()).openSeatSelection(movie.getName(), movie.isComingSoon(), movie.getTrailerUrl());
             }
         });
 
