@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,8 +54,17 @@ public class SnacksFragment extends Fragment {
         lvSnacks.setAdapter(adapter);
 
         btnConfirm.setOnClickListener(v -> {
-            if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).openTicketSummary(movieName, seatCount, ticketTotal, currentSnackTotal, seatsCsv);
+            int totalQty = 0;
+            for (Snack s : snackList) {
+                totalQty += s.getQuantity();
+            }
+
+            if (totalQty < 4) {
+                Toast.makeText(getContext(), "Select at least 4 snacks", Toast.LENGTH_SHORT).show();
+            } else {
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).openTicketSummary(movieName, seatCount, ticketTotal, currentSnackTotal, seatsCsv);
+                }
             }
         });
 

@@ -25,9 +25,10 @@ public class ComingSoonFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         List<Movie> movies = new ArrayList<>();
-        movies.add(new Movie("Oppenheimer", "Drama/History", "180 min", R.drawable.poster_oppenheimer, "https://www.youtube.com/watch?v=uYPbbksJxIg", true));
-        movies.add(new Movie("Dune: Part Two", "Sci-Fi", "166 min", R.drawable.poster_dune, "https://www.youtube.com/watch?v=Way9Dexny3w", true));
-        movies.add(new Movie("The Batman", "Action/Crime", "176 min", R.drawable.poster_batman, "https://www.youtube.com/watch?v=mqqft22n7RE", true));
+        // Updated to use existing poster resources found in project
+        movies.add(new Movie("Oppenheimer", "Drama/History", "180 min", R.drawable.app_logo, "https://www.youtube.com/watch?v=uYPbbksJxIg", true));
+        movies.add(new Movie("Dune: Part Two", "Sci-Fi", "166 min", R.drawable.app_logo, "https://www.youtube.com/watch?v=Way9Dexny3w", true));
+        movies.add(new Movie("The Batman", "Action/Crime", "176 min", R.drawable.app_logo, "https://www.youtube.com/watch?v=mqqft22n7RE", true));
 
         MovieAdapter adapter = new MovieAdapter(movies, movie -> {
             if (getActivity() instanceof MainActivity) {
